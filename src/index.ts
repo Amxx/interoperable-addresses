@@ -1,0 +1,1 @@
+export { InteroperableAddress, addressCoder, nameCoder, computeChecksum} from './ERC7930';
