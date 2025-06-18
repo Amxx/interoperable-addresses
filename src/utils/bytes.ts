@@ -13,7 +13,7 @@ function toBytes(input: BytesLike): Bytes {
   } else if (typeof input === 'string' && /^[-A-Za-z0-9+/]*={0,3}$/.test(input)) {
     return base64.decode(input);
   } else if (typeof input === 'string') {
-    throw new Error(`Invalid BytesLike object: ${input}`)
+    throw new Error(`Invalid BytesLike object: ${input}`);
   } else {
     return new Uint8Array(input);
   }

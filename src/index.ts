@@ -1,1 +1,1 @@
-export { InteroperableAddress, addressCoder, nameCoder, computeChecksum} from './ERC7930';
+export { InteroperableAddress, addressCoder, nameCoder, computeChecksum } from './ERC7930';

@@ -24,8 +24,10 @@ test('Example 1: Ethereum mainnet address', t => {
 });
 
 test('Example 2: Solana mainnet address', t => {
-  const name = 'MJKqp326RZCHnAAbew9MDdui3iCKWco7fsK9sVuZTX2@solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d#88835C11';
-  const address = '0x000100022045296998a6f8e2a784db5d9f95e18fc23f70441a1039446801089879b08c7ef02005333498d5aea4ae009585c43f7b8c30df8e70187d4a713d134f977fc8dfe0b5';
+  const name =
+    'MJKqp326RZCHnAAbew9MDdui3iCKWco7fsK9sVuZTX2@solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d#88835C11';
+  const address =
+    '0x000100022045296998a6f8e2a784db5d9f95e18fc23f70441a1039446801089879b08c7ef02005333498d5aea4ae009585c43f7b8c30df8e70187d4a713d134f977fc8dfe0b5';
   const expected = {
     chainType: 'solana',
     reference: '5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d',
@@ -153,5 +155,8 @@ test('invalid format', t => {
   t.throws(() => addressCoder.decode('0x0002'), new InvalidArgumentError('Unsuported version: 0x0002'));
   t.throws(() => addressCoder.decode('0x00010000'), new InvalidArgumentError('Invalid address length'));
   t.throws(() => addressCoder.decode('0x00010001'), new InvalidArgumentError('Unsuported chain type: 0x0001'));
-  t.throws(() => addressCoder.decode('0x000100000000'), new InvalidArgumentError('Reference and address should not both be empty'));
+  t.throws(
+    () => addressCoder.decode('0x000100000000'),
+    new InvalidArgumentError('Reference and address should not both be empty'),
+  );
 });

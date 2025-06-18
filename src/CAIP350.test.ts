@@ -1,7 +1,7 @@
 import test from 'ava';
 
-import {toBytes} from './utils/bytes';
-import {CAIP350} from './CAIP350';
+import { toBytes } from './utils/bytes';
+import { CAIP350 } from './CAIP350';
 
 test('eip155 - type', t => {
   t.is(CAIP350.eip155.type, '0x0000');
@@ -25,10 +25,10 @@ test('eip155 - decode reference', t => {
   t.deepEqual(CAIP350.eip155.reference.decode('0x01'), Uint8Array.from([1]));
   t.deepEqual(CAIP350.eip155.reference.decode([1]), Uint8Array.from([1]));
 
-  t.deepEqual(CAIP350.eip155.reference.decode(42161n), Uint8Array.from([ 0xa4, 0xb1 ]));
-  t.deepEqual(CAIP350.eip155.reference.decode('42161'), Uint8Array.from([ 0xa4, 0xb1 ]));
-  t.deepEqual(CAIP350.eip155.reference.decode('0xa4b1'), Uint8Array.from([ 0xa4, 0xb1 ]));
-  t.deepEqual(CAIP350.eip155.reference.decode(toBytes('0xa4b1')), Uint8Array.from([ 0xa4, 0xb1 ]));
+  t.deepEqual(CAIP350.eip155.reference.decode(42161n), Uint8Array.from([0xa4, 0xb1]));
+  t.deepEqual(CAIP350.eip155.reference.decode('42161'), Uint8Array.from([0xa4, 0xb1]));
+  t.deepEqual(CAIP350.eip155.reference.decode('0xa4b1'), Uint8Array.from([0xa4, 0xb1]));
+  t.deepEqual(CAIP350.eip155.reference.decode(toBytes('0xa4b1')), Uint8Array.from([0xa4, 0xb1]));
 });
 
 test('eip155 - encode address', t => {
