@@ -1,6 +1,7 @@
 import test from 'ava';
 
 import { InteroperableAddress, addressCoder, nameCoder } from './ERC7930';
+import { InvalidArgumentError } from './utils/errors';
 
 test('Example 1: Ethereum mainnet address', t => {
   const name = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045@eip155:1#4CA88C9C';
@@ -16,6 +17,10 @@ test('Example 1: Ethereum mainnet address', t => {
   t.deepEqual(nameCoder.decode(name), expected);
   t.is(addressCoder.encode(expected), address);
   t.is(nameCoder.encode(expected), name);
+
+  // using chaintype code
+  t.is(addressCoder.encode({ ...expected, chainType: '0x0000' } as InteroperableAddress), address);
+  t.is(nameCoder.encode({ ...expected, chainType: '0x0000' } as InteroperableAddress), name);
 });
 
 test('Example 2: Solana mainnet address', t => {
@@ -32,6 +37,10 @@ test('Example 2: Solana mainnet address', t => {
   t.deepEqual(nameCoder.decode(name), expected);
   t.is(addressCoder.encode(expected), address);
   t.is(nameCoder.encode(expected), name);
+
+  // using chaintype code
+  t.is(addressCoder.encode({ ...expected, chainType: '0x0002' } as InteroperableAddress), address);
+  t.is(nameCoder.encode({ ...expected, chainType: '0x0002' } as InteroperableAddress), name);
 });
 
 test('Example 3: EVM address without chainid', t => {
@@ -47,6 +56,10 @@ test('Example 3: EVM address without chainid', t => {
   t.deepEqual(nameCoder.decode(name), expected);
   t.is(addressCoder.encode(expected), address);
   t.is(nameCoder.encode(expected), name);
+
+  // using chaintype code
+  t.is(addressCoder.encode({ ...expected, chainType: '0x0000' } as InteroperableAddress), address);
+  t.is(nameCoder.encode({ ...expected, chainType: '0x0000' } as InteroperableAddress), name);
 });
 
 test('Example 4: Solana mainnet network, no address', t => {
@@ -62,6 +75,10 @@ test('Example 4: Solana mainnet network, no address', t => {
   t.deepEqual(nameCoder.decode(name), expected);
   t.is(addressCoder.encode(expected), address);
   t.is(nameCoder.encode(expected), name);
+
+  // using chaintype code
+  t.is(addressCoder.encode({ ...expected, chainType: '0x0002' } as InteroperableAddress), address);
+  t.is(nameCoder.encode({ ...expected, chainType: '0x0002' } as InteroperableAddress), name);
 });
 
 test('Example 5: Arbitrum One address', t => {
@@ -78,4 +95,63 @@ test('Example 5: Arbitrum One address', t => {
   t.deepEqual(nameCoder.decode(name), expected);
   t.is(addressCoder.encode(expected), address);
   t.is(nameCoder.encode(expected), name);
+
+  // using chaintype code
+  t.is(addressCoder.encode({ ...expected, chainType: '0x0000' } as InteroperableAddress), address);
+  t.is(nameCoder.encode({ ...expected, chainType: '0x0000' } as InteroperableAddress), name);
+});
+
+test('Example 6: EVM chain without address', t => {
+  const name = '@eip155:1#F54D4FBF';
+  const address = '0x00010000010100';
+  const expected = {
+    chainType: 'eip155',
+    reference: 1n,
+    checksum: 'F54D4FBF',
+  } as InteroperableAddress;
+
+  t.deepEqual(addressCoder.decode(address), expected);
+  t.deepEqual(nameCoder.decode(name), expected);
+  t.is(addressCoder.encode(expected), address);
+  t.is(nameCoder.encode(expected), name);
+
+  // using chaintype code
+  t.is(addressCoder.encode({ ...expected, chainType: '0x0000' } as InteroperableAddress), address);
+  t.is(nameCoder.encode({ ...expected, chainType: '0x0000' } as InteroperableAddress), name);
+});
+
+test('Example 7: Solana address without a network', t => {
+  const name = 'MJKqp326RZCHnAAbew9MDdui3iCKWco7fsK9sVuZTX2@solana#18D1CBB4';
+  const address = '0x00010002002005333498d5aea4ae009585c43f7b8c30df8e70187d4a713d134f977fc8dfe0b5';
+  const expected = {
+    chainType: 'solana',
+    address: 'MJKqp326RZCHnAAbew9MDdui3iCKWco7fsK9sVuZTX2',
+    checksum: '18D1CBB4',
+  } as InteroperableAddress;
+
+  t.deepEqual(addressCoder.decode(address), expected);
+  t.deepEqual(nameCoder.decode(name), expected);
+  t.is(addressCoder.encode(expected), address);
+  t.is(nameCoder.encode(expected), name);
+
+  // using chaintype code
+  t.is(addressCoder.encode({ ...expected, chainType: '0x0002' } as InteroperableAddress), address);
+  t.is(nameCoder.encode({ ...expected, chainType: '0x0002' } as InteroperableAddress), name);
+});
+
+test('parse name with invalid checksum', t => {
+  // bad checksum
+  t.notThrows(() => nameCoder.decode('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045@eip155#144A4B21', false));
+  t.throws(() => nameCoder.decode('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045@eip155#144A4B21', true));
+
+  // good checksum
+  t.notThrows(() => nameCoder.decode('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045@eip155#B26DB7CB', false));
+  t.notThrows(() => nameCoder.decode('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045@eip155#B26DB7CB', true));
+});
+
+test('invalid format', t => {
+  t.throws(() => addressCoder.decode('0x0002'), new InvalidArgumentError('Unsuported version: 0x0002'));
+  t.throws(() => addressCoder.decode('0x00010000'), new InvalidArgumentError('Invalid address length'));
+  t.throws(() => addressCoder.decode('0x00010001'), new InvalidArgumentError('Unsuported chain type: 0x0001'));
+  t.throws(() => addressCoder.decode('0x000100000000'), new InvalidArgumentError('Reference and address should not both be empty'));
 });

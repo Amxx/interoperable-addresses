@@ -1,8 +1,8 @@
 {
   "name": "interoperable-addresses",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Utilities to manipulate ERC-7930 interoperable addresses",
-  "repository": "github:OpenZeppelin/interoperable-addresses",
+  "repository": "github:Amxx/interoperable-addresses",
   "main": "dist/index.js",
   "scripts": {
     "prepublishOnly": "npm run clean",

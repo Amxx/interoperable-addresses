@@ -13,9 +13,12 @@ test('toBytes', t => {
   t.deepEqual(bytes.toBytes(Uint8Array.of(1, 2, 3)), Uint8Array.of(1, 2, 3));
   t.deepEqual(bytes.toBytes([1, 2, 3]), Uint8Array.of(1, 2, 3));
   t.deepEqual(bytes.toBytes('0x010203'), Uint8Array.of(1, 2, 3));
-  t.deepEqual(bytes.toBytes('66051'), Uint8Array.of(1, 2, 3));
+  t.deepEqual(bytes.toBytes('010203'), Uint8Array.of(1, 2, 3));
   t.deepEqual(bytes.toBytes('Ldp'), Uint8Array.of(1, 2, 3));
   t.deepEqual(bytes.toBytes('AQID'), Uint8Array.of(1, 2, 3));
+
+  // invalid
+  t.throws(() => bytes.toBytes('hello world'));
 });
 
 test('toHex', t => {
@@ -29,12 +32,9 @@ test('toHex', t => {
   t.is(bytes.toHex(Uint8Array.of(1, 2, 3)), '0x010203');
   t.is(bytes.toHex([1, 2, 3]), '0x010203');
   t.is(bytes.toHex('0x010203'), '0x010203');
-  t.is(bytes.toHex('66051'), '0x010203');
+  t.is(bytes.toHex('010203'), '0x010203');
   t.is(bytes.toHex('Ldp'), '0x010203');
   t.is(bytes.toHex('AQID'), '0x010203');
-
-  // no 0x prefix, but also not a decimal value
-  t.is(bytes.toHex('01ef'), '0x01ef');
 });
 
 test('toBase58', t => {
@@ -48,7 +48,7 @@ test('toBase58', t => {
   t.is(bytes.toBase58(Uint8Array.of(1, 2, 3)), 'Ldp');
   t.is(bytes.toBase58([1, 2, 3]), 'Ldp');
   t.is(bytes.toBase58('0x010203'), 'Ldp');
-  t.is(bytes.toBase58('66051'), 'Ldp');
+  t.is(bytes.toBase58('010203'), 'Ldp');
   t.is(bytes.toBase58('Ldp'), 'Ldp');
   t.is(bytes.toBase58('AQID'), 'Ldp');
 });
@@ -64,7 +64,7 @@ test('toBase64', t => {
   t.is(bytes.toBase64(Uint8Array.of(1, 2, 3)), 'AQID');
   t.is(bytes.toBase64([1, 2, 3]), 'AQID');
   t.is(bytes.toBase64('0x010203'), 'AQID');
-  t.is(bytes.toBase64('66051'), 'AQID');
+  t.is(bytes.toBase64('010203'), 'AQID');
   t.is(bytes.toBase64('Ldp'), 'AQID');
   t.is(bytes.toBase64('AQID'), 'AQID');
 });
